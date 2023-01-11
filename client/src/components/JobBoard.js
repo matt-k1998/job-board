@@ -1,23 +1,22 @@
 import JobList from './JobList';
-import { getJobs } from '../graphql/queries';
-import { useEffect, useState } from 'react';
+import { JOBS_QUERY } from '../graphql/queries';
+import { useQuery } from '@apollo/client';
 
 function JobBoard() {
-  const [jobs, setJobs] = useState([]);
-  const [error, setError] = useState(false);
-  useEffect(() => {
-    // getJobs().then((jobs) => setJobs(jobs));
-    //The line above can be simplified to:
-    getJobs().then(setJobs)
-      .catch((err) => {
-        console.log(err);
-        setError(true);
-      });
-  }, []);
+  const { data, loading, error } = useQuery(JOBS_QUERY, {
+    //The network-only fetch policy means that the data will always be fetched from the server and it will store the results in the cache
+    fetchPolicy: 'network-only',
+  });
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
 
   if(error) {
     return <p>Something went wrong, check your internet connection</p>
   }
+
+  const { jobs } = data;
 
   return (
     <div>

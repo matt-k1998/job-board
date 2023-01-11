@@ -3,7 +3,7 @@ import { getAccessToken } from '../auth';
 
 const GRAPHQL_URL = 'http://localhost:9000/graphql';
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
     uri: GRAPHQL_URL,
     cache: new InMemoryCache(),
 });
@@ -27,6 +27,19 @@ const JOB_QUERY = gql`
         }
     }
     ${JOB_DETAIL_FRAGMENT}
+`;
+
+export const JOBS_QUERY = gql`
+    query JobsQuery {
+        jobs {
+            id
+            title
+            company {
+                id
+                name
+            }
+        }
+    }
 `;
 
 export async function createJob(input) {
@@ -71,32 +84,6 @@ export async function deleteJob(id) {
     };
     const { data: { job } } = await client.mutate({ mutation, variables, context });
     return job;
-}
-
-export async function getJobs() {
-    const query = gql`
-        query JobsQuery {
-            jobs {
-                id
-                title
-                company {
-                    id
-                    name
-                }
-            }
-        }
-    `;
-    // const result = await client.query({ query });
-    // return result.data.jobs;
-
-    //You can use destructuring to extract "data" from "result"
-    //Therefore, the two lines of code above can be replaced with:
-    const { data: { jobs } } = await client.query({
-        query,
-        fetchPolicy: 'network-only',
-     });
-     //The network-only fetch policy means that the data will always be fetched from the server and it will store the results in the cache
-    return jobs;
 }
 
 export async function getJob(id) {
