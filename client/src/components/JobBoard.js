@@ -9,7 +9,7 @@ function JobBoard() {
   }
 
   if(error) {
-    return <p>Something went wrong, check your internet connection</p>
+    return <p>Something went wrong while fetching jobs</p>
   }
 
   return (
