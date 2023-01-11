@@ -9,7 +9,10 @@ function JobBoard() {
     // getJobs().then((jobs) => setJobs(jobs));
     //The line above can be simplified to:
     getJobs().then(setJobs)
-      .catch((err) => setError(true));
+      .catch((err) => {
+        console.log(err);
+        setError(true);
+      });
   }, []);
 
   if(error) {
