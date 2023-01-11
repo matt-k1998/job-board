@@ -1,12 +1,8 @@
 import JobList from './JobList';
-import { JOBS_QUERY } from '../graphql/queries';
-import { useQuery } from '@apollo/client';
+import { useJobs } from '../graphql/hooks';
 
 function JobBoard() {
-  const { data, loading, error } = useQuery(JOBS_QUERY, {
-    //The network-only fetch policy means that the data will always be fetched from the server and it will store the results in the cache
-    fetchPolicy: 'network-only',
-  });
+  const { jobs, loading, error } = useJobs();
 
   if (loading) {
     return <p>Loading...</p>
@@ -15,8 +11,6 @@ function JobBoard() {
   if(error) {
     return <p>Something went wrong, check your internet connection</p>
   }
-
-  const { jobs } = data;
 
   return (
     <div>
