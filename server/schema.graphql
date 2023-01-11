@@ -1,0 +1,42 @@
+# The type Query is used for getting data
+type Query {
+    job(id: ID!): Job
+    jobs: [Job!]
+    company(id: ID!): Company
+}
+
+# The type Mutation is ued for posting data
+type Mutation {
+    createJob(input: CreateJobInput!): Job
+    deleteJob(id: ID!): Job
+    updateJob(input: UpdateJobInput!): Job
+}
+
+# Regular types can also be called "output types" because they can only be returned by a query
+# or a mutation, but input types can only be passed as arguments by a query or a mutation
+type Company {
+    id: ID!
+    name: String!
+    description: String
+    jobs: [Job!]
+}
+
+type Job {
+    id: ID!
+    title: String!
+    company: Company!
+    description: String
+}
+
+# input simply means that objects of this type can only be used as input arguments
+# for mutations (such as creating new jobs)
+input CreateJobInput {
+    title: String!
+    description: String
+}
+
+input UpdateJobInput {
+    id: ID!
+    title: String!
+    description: String
+}
