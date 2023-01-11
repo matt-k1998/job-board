@@ -24,7 +24,6 @@ export async function createJob(input) {
     return job;
 }
 
-//This does not work anymore, need to add the bearer token to the header in order to complete the request
 export async function deleteJob(id) {
     const query = gql`
         mutation DeleteJobMutation($id: ID!){
@@ -34,7 +33,8 @@ export async function deleteJob(id) {
         }
     `;
     const variables = { id };
-    const { job } = await request(GRAPHQL_URL, query, variables);
+    const headers = { 'Authorization': 'Bearer ' + getAccessToken() };
+    const { job } = await request(GRAPHQL_URL, query, variables, headers);
     return job;
 }
 
