@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode';
 // NOTE: this example keeps the access token in LocalStorage just because it's
 // simpler, but in a real application you may want to use cookies instead for
 // better security
@@ -7,6 +8,19 @@ const API_URL = 'http://localhost:9000';
 
 export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function getUser() {
+  const token = getAccessToken();
+  if (!token) {
+    return null;
+  }
+  return getUserFromToken(token);
+}
+
+function getUserFromToken(token) {
+  const jwtPayload = jwtDecode(token);
+  return { id: jwtPayload.sub };
 }
 
 export async function login(email, password) {

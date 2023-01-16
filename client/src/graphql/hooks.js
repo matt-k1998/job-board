@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { getAccessToken } from "../auth";
-import { COMPANY_QUERY, CREATE_JOB_MUTATION, JOBS_QUERY, JOB_QUERY } from "./queries";
+import { ALL_JOBS_QUERY, COMPANY_QUERY, CREATE_JOB_MUTATION, JOBS_PER_COMPANY_QUERY, JOB_QUERY, USER_QUERY } from "./queries";
 
 export function useJob(id) {
     const { data, loading, error } = useQuery(JOB_QUERY, {
@@ -13,8 +13,32 @@ export function useJob(id) {
     };
 }
 
+export function useJobsPerComany(userId) {
+    const { data, loading, error } = useQuery(JOBS_PER_COMPANY_QUERY, {
+        variables: { userId },
+        onError: (error) =>
+            console.log(error)
+    });
+    return {
+        jobs: data?.user.jobs,
+        loading,
+        error,
+    }
+}
+
+export function useUser(id) {
+    const { data, loading, error } = useQuery(USER_QUERY, {
+        variables: { id },
+    });
+    return {
+        user: data?.user,
+        loading,
+        error: Boolean(error),
+    };
+}
+
 export function useJobs() {
-    const { data, loading, error } = useQuery(JOBS_QUERY, {
+    const { data, loading, error } = useQuery(ALL_JOBS_QUERY, {
       //The network-only fetch policy means that the data will always be fetched from the server and it will store the results in the cache
       fetchPolicy: 'network-only',
     });
@@ -23,7 +47,7 @@ export function useJobs() {
       loading,
       error: Boolean(error),
     };
-  }
+}
 
 export function useCompany(id) {
     const { data, loading, error } = useQuery(COMPANY_QUERY, {

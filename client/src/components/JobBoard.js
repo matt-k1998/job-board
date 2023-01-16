@@ -1,8 +1,15 @@
 import JobList from './JobList';
-import { useJobs } from '../graphql/hooks';
+import { useJobsPerComany } from '../graphql/hooks';
+import { useState } from 'react';
+import { getUser } from '../auth';
 
 function JobBoard() {
-  const { jobs, loading, error } = useJobs();
+  const [currentUser, setUser] = useState(getUser);
+  const { jobs, loading, error } = useJobsPerComany(currentUser.id);
+
+  if (!currentUser) {
+    return <p>Sign in first</p>
+  }
 
   if (loading) {
     return <p>Loading...</p>
@@ -12,14 +19,16 @@ function JobBoard() {
     return <p>Something went wrong while fetching jobs</p>
   }
 
-  return (
-    <div>
-      <h1 className="title">
-        Job Board
-      </h1>
-      <JobList jobs={jobs} />
-    </div>
-  );
+  if(jobs) {
+    return (
+      <div>
+        <h1 className="title">
+          Job Board
+        </h1>
+        <JobList jobs={jobs} />
+      </div>
+    );
+  }
 }
 
 export default JobBoard;

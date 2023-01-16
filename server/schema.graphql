@@ -3,9 +3,10 @@ type Query {
     job(id: ID!): Job
     jobs: [Job!]
     company(id: ID!): Company
+    user(id: ID!): User
 }
 
-# The type Mutation is ued for posting data
+# The type Mutation is used for posting data
 type Mutation {
     createJob(input: CreateJobInput!): Job
     deleteJob(id: ID!): Job
@@ -26,6 +27,13 @@ type Job {
     title: String!
     company: Company!
     description: String
+}
+
+type User {
+    id: ID!
+    email: String!
+    companyId: String!
+    jobs: [Job!]
 }
 
 # input simply means that objects of this type can only be used as input arguments

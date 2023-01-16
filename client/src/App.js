@@ -22,7 +22,7 @@ function App() {
 
   const handleLogout = () => {
     setLoggedIn(false);
-    navigate('/');
+    navigate('/login');
   };
 
   return (

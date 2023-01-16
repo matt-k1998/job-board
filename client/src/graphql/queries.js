@@ -29,7 +29,21 @@ export const JOB_QUERY = gql`
     ${JOB_DETAIL_FRAGMENT}
 `;
 
-export const JOBS_QUERY = gql`
+export const JOBS_PER_COMPANY_QUERY = gql`
+    query SearchJobs($userId: ID!) {
+        user(id: $userId) {
+            id
+            companyId
+            jobs {
+                id
+                title
+                description
+            }
+        }
+    }
+`;
+
+export const ALL_JOBS_QUERY = gql`
     query JobsQuery {
         jobs {
             id
@@ -52,6 +66,16 @@ export const COMPANY_QUERY = gql`
                 id
                 title
             }
+        }
+    }
+`;
+
+export const USER_QUERY = gql`
+    query UserQuery($id: ID!) {
+        user(id: $id) {
+            id
+            companyId
+            email
         }
     }
 `;

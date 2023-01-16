@@ -1,4 +1,4 @@
-import { Company, Job } from './db.js';
+import { Company, Job, User } from './db.js';
 
 function rejectIf(condition){
     if (condition) {
@@ -11,6 +11,7 @@ export const resolvers = {
         job: (_root, args) => Job.findById(args.id),
         jobs: () => Job.findAll(),
         company: (_root, args) => Company.findById(args.id),
+        user: (_root, args) => User.findById(args.id),
     },
 
     Mutation: {
@@ -37,6 +38,12 @@ export const resolvers = {
     // to the companyId that is stored in the jobs table:
     Company: {
         jobs: (company) => Job.findAll((job) => job.companyId === company.id)
+    },
+
+    // The following finds all the jobs for a user by comparing the companyId of a user
+    // to the companyId that is stored in the jobs table:
+    User: {
+        jobs: (user) => Job.findAll((job) => job.companyId === user.companyId)
     },
 
     // The following finds the company for a given job:

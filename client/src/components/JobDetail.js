@@ -22,6 +22,8 @@ function JobDetail() {
     console.log('job with id: ', jobId, 'deleted');
     navigate(`/`)
   }
+  const editJobHandler = async (event) => {
+  }
   return (
     <div>
       <h1 className="title">
@@ -36,10 +38,20 @@ function JobDetail() {
         {job.description}
       </div>
       <div>
+      <button
+          style={{
+            background: "green",
+            color: "white",
+            margin: "5px",
+          }}
+          onClick={editJobHandler}>
+          Edit Job
+        </button>
         <button
           style={{
             background: "red",
-            color: "white"
+            color: "white",
+            margin: "5px",
           }}
           onClick={deleteJobHandler}>
           Delete Job
