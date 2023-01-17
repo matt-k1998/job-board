@@ -7,8 +7,7 @@ import CompanyDetail from './components/CompanyDetail';
 import LoginForm from './components/LoginForm';
 import JobBoard from './components/JobBoard';
 import JobDetail from './components/JobDetail';
-import CreateJobForm from './components/CreateJobForm';
-import EditJobForm from './components/EditJobForm';
+import JobForm from './components/JobForm';
 import NavBar from './components/NavBar';
 import { client } from './graphql/queries';
 import ProfileSettings from './components/ProfileSettings';
@@ -39,13 +38,13 @@ function App() {
             element={<CompanyDetail />}
           />
           <Route path="/jobs/new"
-            element={<CreateJobForm />}
+            element={<JobForm />}
           />
           <Route path="/jobs/:jobId"
             element={<JobDetail />}
           />
           <Route path="/jobs/:jobId/edit"
-            element={<EditJobForm />}
+            element={<JobForm />}
           />
           <Route path="/login"
             element={<LoginForm onLogin={handleLogin} />}
