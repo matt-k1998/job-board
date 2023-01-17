@@ -1,0 +1,17 @@
+.field {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    width: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.control {
+    width: 8%;
+    height: 30px;
+}
+
+.label{
+    width: 25%;
+}

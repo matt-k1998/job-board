@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useJob } from '../graphql/hooks';
 import { deleteJob } from '../graphql/queries';
+import classes from './JobDetail.module.css'
 
 function JobDetail() {
   const navigate = useNavigate();
@@ -22,7 +23,9 @@ function JobDetail() {
     console.log('job with id: ', jobId, 'deleted');
     navigate(`/`)
   }
-  const editJobHandler = async (event) => {
+  const editJobHandler = (event) => {
+    event.preventDefault();
+    navigate(`/jobs/${jobId}/edit`, { state: job });
   }
   return (
     <div>
@@ -38,21 +41,13 @@ function JobDetail() {
         {job.description}
       </div>
       <div>
-      <button
-          style={{
-            background: "green",
-            color: "white",
-            margin: "5px",
-          }}
+        <button
+          className={classes.editButton}
           onClick={editJobHandler}>
           Edit Job
         </button>
         <button
-          style={{
-            background: "red",
-            color: "white",
-            margin: "5px",
-          }}
+          className={classes.deleteButton}
           onClick={deleteJobHandler}>
           Delete Job
         </button>

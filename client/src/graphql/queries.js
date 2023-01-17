@@ -38,6 +38,10 @@ export const JOBS_PER_COMPANY_QUERY = gql`
                 id
                 title
                 description
+                company {
+                    id
+                    name
+                }
             }
         }
     }
@@ -83,6 +87,15 @@ export const USER_QUERY = gql`
 export const CREATE_JOB_MUTATION = gql`
     mutation CreateJobMutation($input: CreateJobInput!){
         job: createJob(input: $input) {
+            ...JobDetail
+        }
+    }
+    ${JOB_DETAIL_FRAGMENT}
+`;
+
+export const UPDATE_JOB_MUTATION = gql`
+    mutation UpdateJobMutation($input: UpdateJobInput!){
+        job: updateJob(input: $input) {
             ...JobDetail
         }
     }

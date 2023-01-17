@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useCreateJob } from '../graphql/hooks';
 
-function JobForm() {
+function CreateJobForm() {
+
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -17,13 +18,13 @@ function JobForm() {
   return (
     <div>
       <h1 className="title">
-        New Job
+        Add Job
       </h1>
       <div className="box">
         <form>
           <div className="field">
             <label className="label">
-              Title
+              Job Title
             </label>
             <div className="control">
               <input className="input" type="text" value={title}
@@ -33,7 +34,7 @@ function JobForm() {
           </div>
           <div className="field">
             <label className="label">
-              Description
+              Job Description
             </label>
             <div className="control">
               <textarea className="textarea" rows={10} value={description}
@@ -45,7 +46,7 @@ function JobForm() {
             <div className="control">
               <button className="button is-link" disabled={loading}
                 onClick={handleSubmit}>
-                Submit
+                Add Job
               </button>
             </div>
           </div>
@@ -55,4 +56,4 @@ function JobForm() {
   );
 }
 
-export default JobForm;
+export default CreateJobForm;
