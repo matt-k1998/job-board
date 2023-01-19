@@ -44,6 +44,17 @@ export const resolvers = {
                 companyId: user.companyId,
             });
         },
+        updateUserEmail: async (_root, { input }, { user }) => {
+            rejectIf(!user);
+            const userFromDb = await User.findById(input.id);
+            rejectIf(userFromDb.id !== user.id);
+            return User.update({
+                ...input,
+                name: user.name,
+                password: user.password,
+                companyId: user.companyId,
+            });
+        },
     },
 
     // The following finds all the jobs for a company by comparing the id of the company

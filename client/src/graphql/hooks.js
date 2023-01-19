@@ -121,9 +121,9 @@ export function useUpdateJob() {
 export function useUpdateUserName() {
     const [mutate, { loading, error }] = useMutation(UPDATE_USER_NAME_MUTATION);
     return {
-        updateUserName: async (id, name, email, password) => {
+        updateUserName: async (id, name, email, password, companyId) => {
             const { data: { user } } = await mutate({
-                variables: { input: { id, name, email, password } },
+                variables: { input: { id, name, email, password, companyId } },
                 context: {
                   headers: { 'Authorization': 'Bearer ' + getAccessToken() },
                 },

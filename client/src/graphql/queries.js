@@ -82,20 +82,18 @@ export const USER_QUERY = gql`
             email
             password
             companyId
-            company{
-                name
-            }
         }
     }
 `;
 
 export const UPDATE_USER_NAME_MUTATION = gql`
-    mutation UpdateUserNameMutation($input: UpdateUserNameInput!){
+    mutation UpdateUserNameMutation($input: UpdateUserInput!){
         user: updateUserName(input: $input) {
             id
             name
             email
             password
+            companyId
         }
     }
 `;
