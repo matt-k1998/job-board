@@ -3,6 +3,7 @@ type Query {
     job(id: ID!): Job
     jobs: [Job!]
     company(id: ID!): Company
+    companies: [Company!]
     user(id: ID!): User
 }
 
@@ -11,6 +12,7 @@ type Mutation {
     createJob(input: CreateJobInput!): Job
     deleteJob(id: ID!): Job
     updateJob(input: UpdateJobInput!): Job
+    updateUserName(input: UpdateUserNameInput!): User
 }
 
 # Regular types can also be called "output types" because they can only be returned by a query
@@ -31,9 +33,13 @@ type Job {
 
 type User {
     id: ID!
+    name: String!
     email: String!
+    password: String!
     companyId: String!
+    company: Company!
     jobs: [Job!]
+    companies: [Company!]
 }
 
 # input simply means that objects of this type can only be used as input arguments
@@ -47,4 +53,17 @@ input UpdateJobInput {
     id: ID!
     title: String!
     description: String
+}
+
+input UpdateUserNameInput {
+    id: ID!
+    name: String!
+    email: String!
+    password: String!
+}
+
+input UpdateCompanyInput {
+    id: ID!
+    name: String!
+    description: String!
 }

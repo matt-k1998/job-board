@@ -1,17 +1,5 @@
-.editButton{
-    background: green;
-    color: white;
+.buttons {
+    display: inline;
     margin: 5px;
-    padding: 5px;
-    border: 5px;
-    cursor: pointer;
-}
-
-.deleteButton{
-    background: red;
-    color: white;
-    margin: 5px;
-    padding: 5px;
-    border: 5px;
-    cursor: pointer;
+    width: 2.5%;
 }

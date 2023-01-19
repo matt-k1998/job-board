@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useJob } from '../graphql/hooks';
 import { deleteJob } from '../graphql/queries';
 import classes from './JobDetail.module.css'
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function JobDetail() {
   const navigate = useNavigate();
@@ -41,15 +43,11 @@ function JobDetail() {
         {job.description}
       </div>
       <div>
-        <button
-          className={classes.editButton}
-          onClick={editJobHandler}>
-          Edit Job
+        <button className={classes.buttons}>
+          <EditIcon onClick={editJobHandler}/>
         </button>
-        <button
-          className={classes.deleteButton}
-          onClick={deleteJobHandler}>
-          Delete Job
+        <button className={classes.buttons}>
+          <DeleteIcon onClick={deleteJobHandler}/>
         </button>
       </div>
     </div>

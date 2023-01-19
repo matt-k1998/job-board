@@ -11,6 +11,7 @@ export const resolvers = {
         job: (_root, args) => Job.findById(args.id),
         jobs: () => Job.findAll(),
         company: (_root, args) => Company.findById(args.id),
+        companies: () => Company.findAll(),
         user: (_root, args) => User.findById(args.id),
     },
 
@@ -32,6 +33,17 @@ export const resolvers = {
             rejectIf(job.companyId !== user.companyId);
             return Job.update({...input, companyId: user.companyId });
         },
+        updateUserName: async (_root, { input }, { user }) => {
+            rejectIf(!user);
+            const userFromDb = await User.findById(input.id);
+            rejectIf(userFromDb.id !== user.id);
+            return User.update({
+                ...input,
+                email: user.email,
+                password: user.password,
+                companyId: user.companyId,
+            });
+        },
     },
 
     // The following finds all the jobs for a company by comparing the id of the company
@@ -43,7 +55,9 @@ export const resolvers = {
     // The following finds all the jobs for a user by comparing the companyId of a user
     // to the companyId that is stored in the jobs table:
     User: {
-        jobs: (user) => Job.findAll((job) => job.companyId === user.companyId)
+        jobs: (user) => Job.findAll((job) => job.companyId === user.companyId),
+        company: (user) => Company.findById(user.companyId),
+        companies: () => Company.findAll(),
     },
 
     // The following finds the company for a given job:

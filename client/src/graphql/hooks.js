@@ -1,6 +1,15 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { getAccessToken } from "../auth";
-import { ALL_JOBS_QUERY, COMPANY_QUERY, CREATE_JOB_MUTATION, JOBS_PER_COMPANY_QUERY, JOB_QUERY, UPDATE_JOB_MUTATION, USER_QUERY } from "./queries";
+import {
+    ALL_JOBS_QUERY,
+    COMPANY_QUERY,
+    CREATE_JOB_MUTATION,
+    JOBS_PER_COMPANY_QUERY,
+    JOB_QUERY,
+    UPDATE_JOB_MUTATION,
+    UPDATE_USER_NAME_MUTATION,
+    USER_QUERY
+} from "./queries";
 
 export function useJob(id) {
     const { data, loading, error } = useQuery(JOB_QUERY, {
@@ -103,6 +112,30 @@ export function useUpdateJob() {
                 },
             });
             return job;
+        },
+        loading,
+        error: Boolean(error),
+    }
+}
+
+export function useUpdateUserName() {
+    const [mutate, { loading, error }] = useMutation(UPDATE_USER_NAME_MUTATION);
+    return {
+        updateUserName: async (id, name, email, password) => {
+            const { data: { user } } = await mutate({
+                variables: { input: { id, name, email, password } },
+                context: {
+                  headers: { 'Authorization': 'Bearer ' + getAccessToken() },
+                },
+                update: (cache, { data: { user } }) => {
+                  cache.writeQuery({
+                      query: USER_QUERY,
+                      variables: { id: user.id },
+                      data: { user },
+                  });
+                },
+            });
+            return user;
         },
         loading,
         error: Boolean(error),
