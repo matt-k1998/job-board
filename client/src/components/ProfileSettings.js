@@ -7,8 +7,8 @@ import { getUser } from '../auth';
 import { useUser, useUpdateUserName, useUpdateUserEmail, useUpdateUserPassword } from '../graphql/hooks';
 
 function ProfileSettings() {
-    const [currentUser, setUser] = useState(getUser);
-    const [visibleItem, setVisibleItem] = useState('');
+    const [currentUser] = useState(getUser);
+    const [visibleItem, setVisibleItem] = useState();
     const { user } = useUser(currentUser.id);
 
     const [name, setName] = useState(!user ? '' : user.name);
@@ -31,6 +31,11 @@ function ProfileSettings() {
     const handleUserPasswordChange = async (event) => {
         event.preventDefault();
         await updateUserPassword(user.id, name, user.email, password, user.companyId);
+    }
+
+    const handleCancelPress = (event) => {
+        event.preventDefault();
+        setVisibleItem();
     }
 
     return (
@@ -62,7 +67,7 @@ function ProfileSettings() {
                                     <CheckIcon onClick={handleUserNameChange}/>
                                 </button>
                                 <button className={classes.confirmCancel}>
-                                    <CancelIcon onClick={(e) => e.preventDefault()}/>
+                                    <CancelIcon onClick={handleCancelPress}/>
                                 </button>
                             </form>
                         </div>
@@ -90,7 +95,7 @@ function ProfileSettings() {
                                 <CheckIcon onClick={handleUserEmailChange}/>
                             </button>
                             <button className={classes.confirmCancel}>
-                                <CancelIcon onClick={(e) => e.preventDefault()}/>
+                                <CancelIcon onClick={handleCancelPress}/>
                             </button>
                         </div>
                     }
@@ -117,7 +122,7 @@ function ProfileSettings() {
                                 <CheckIcon onClick={handleUserPasswordChange}/>
                             </button>
                             <button className={classes.confirmCancel}>
-                                <CancelIcon onClick={(e) => e.preventDefault()}/>
+                                <CancelIcon onClick={handleCancelPress}/>
                             </button>
                         </div>
                     }
@@ -142,7 +147,7 @@ function ProfileSettings() {
                                 <CheckIcon onClick={(e) => e.preventDefault()}/>
                             </button>
                             <button className={classes.confirmCancel}>
-                                <CancelIcon onClick={(e) => e.preventDefault()}/>
+                                <CancelIcon onClick={handleCancelPress}/>
                             </button>
                         </div>
                     }

@@ -20,6 +20,16 @@ const JOB_DETAIL_FRAGMENT = gql`
     }
 `;
 
+const USER_DETAIL_FRAGMENT = gql`
+    fragment UserDetail on User {
+        id
+        name
+        email
+        password
+        companyId
+    }
+`;
+
 export const JOB_QUERY = gql`
     query JobQuery($id: ID!) {
         job(id: $id) {
@@ -89,37 +99,28 @@ export const USER_QUERY = gql`
 export const UPDATE_USER_NAME_MUTATION = gql`
     mutation UpdateUserNameMutation($input: UpdateUserInput!){
         user: updateUserName(input: $input) {
-            id
-            name
-            email
-            password
-            companyId
+            ...UserDetail
         }
     }
+    ${USER_DETAIL_FRAGMENT}
 `;
 
 export const UPDATE_USER_EMAIL_MUTATION = gql`
     mutation UpdateUserEmailMutation($input: UpdateUserInput!){
         user: updateUserEmail(input: $input) {
-            id
-            name
-            email
-            password
-            companyId
+            ...UserDetail
         }
     }
+    ${USER_DETAIL_FRAGMENT}
 `;
 
 export const UPDATE_USER_PASSWORD_MUTATION = gql`
     mutation UpdateUserPasswordMutation($input: UpdateUserInput!){
         user: updateUserPassword(input: $input) {
-            id
-            name
-            email
-            password
-            companyId
+            ...UserDetail
         }
     }
+    ${USER_DETAIL_FRAGMENT}
 `;
 
 export const CREATE_JOB_MUTATION = gql`
