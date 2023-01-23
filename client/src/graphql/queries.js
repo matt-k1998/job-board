@@ -98,6 +98,30 @@ export const UPDATE_USER_NAME_MUTATION = gql`
     }
 `;
 
+export const UPDATE_USER_EMAIL_MUTATION = gql`
+    mutation UpdateUserEmailMutation($input: UpdateUserInput!){
+        user: updateUserEmail(input: $input) {
+            id
+            name
+            email
+            password
+            companyId
+        }
+    }
+`;
+
+export const UPDATE_USER_PASSWORD_MUTATION = gql`
+    mutation UpdateUserPasswordMutation($input: UpdateUserInput!){
+        user: updateUserPassword(input: $input) {
+            id
+            name
+            email
+            password
+            companyId
+        }
+    }
+`;
+
 export const CREATE_JOB_MUTATION = gql`
     mutation CreateJobMutation($input: CreateJobInput!){
         job: createJob(input: $input) {

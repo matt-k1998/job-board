@@ -14,6 +14,7 @@ type Mutation {
     updateJob(input: UpdateJobInput!): Job
     updateUserName(input: UpdateUserInput!): User
     updateUserEmail(input: UpdateUserInput!): User
+    updateUserPassword(input: UpdateUserInput!): User
 }
 
 # Regular types can also be called "output types" because they can only be returned by a query

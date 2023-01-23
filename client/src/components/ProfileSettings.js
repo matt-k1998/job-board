@@ -4,23 +4,33 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from 'react';
 import classes from './ProfileSettings.module.css'
 import { getUser } from '../auth';
-import { useUser, useUpdateUserName } from '../graphql/hooks';
+import { useUser, useUpdateUserName, useUpdateUserEmail, useUpdateUserPassword } from '../graphql/hooks';
 
 function ProfileSettings() {
     const [currentUser, setUser] = useState(getUser);
     const [visibleItem, setVisibleItem] = useState('');
     const { user } = useUser(currentUser.id);
 
-    console.log(user);
-
     const [name, setName] = useState(!user ? '' : user.name);
     const [email, setEmail] = useState(!user ? '' : user.email);
     const [password, setPassword] = useState(!user ? '' : user.password);
-    const { updateUserName, loading, error } = useUpdateUserName();
+    const { updateUserName} = useUpdateUserName();
+    const { updateUserEmail } = useUpdateUserEmail();
+    const { updateUserPassword } = useUpdateUserPassword();
 
     const handleUserNameChange = async (event) => {
         event.preventDefault();
-        await updateUserName(user.id, name, user.email, user.password);
+        await updateUserName(user.id, name, user.email, user.password, user.companyId);
+    }
+
+    const handleUserEmailChange = async (event) => {
+        event.preventDefault();
+        await updateUserEmail(user.id, name, email, user.password, user.companyId);
+    }
+
+    const handleUserPasswordChange = async (event) => {
+        event.preventDefault();
+        await updateUserPassword(user.id, name, user.email, password, user.companyId);
     }
 
     return (
@@ -74,9 +84,10 @@ function ProfileSettings() {
                             <input type="text" className={classes.editInput}
                                 defaultValue={email}
                                 onClick={(e) =>  e.preventDefault()}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={(e) => e.preventDefault()}/>
+                                <CheckIcon onClick={handleUserEmailChange}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={(e) => e.preventDefault()}/>
@@ -99,10 +110,11 @@ function ProfileSettings() {
                         <div className={classes.field}>
                             <input type="text" className={classes.editInput}
                                 defaultValue={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 onClick={(e) =>  e.preventDefault()}
                             />
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={(e) => e.preventDefault()}/>
+                                <CheckIcon onClick={handleUserPasswordChange}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={(e) => e.preventDefault()}/>

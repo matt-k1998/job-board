@@ -7,7 +7,9 @@ import {
     JOBS_PER_COMPANY_QUERY,
     JOB_QUERY,
     UPDATE_JOB_MUTATION,
+    UPDATE_USER_EMAIL_MUTATION,
     UPDATE_USER_NAME_MUTATION,
+    UPDATE_USER_PASSWORD_MUTATION,
     USER_QUERY
 } from "./queries";
 
@@ -127,12 +129,39 @@ export function useUpdateUserName() {
                 context: {
                   headers: { 'Authorization': 'Bearer ' + getAccessToken() },
                 },
-                update: (cache, { data: { user } }) => {
-                  cache.writeQuery({
-                      query: USER_QUERY,
-                      variables: { id: user.id },
-                      data: { user },
-                  });
+            });
+            return user;
+        },
+        loading,
+        error: Boolean(error),
+    }
+}
+
+export function useUpdateUserEmail() {
+    const [mutate, { loading, error }] = useMutation(UPDATE_USER_EMAIL_MUTATION);
+    return {
+        updateUserEmail: async (id, name, email, password, companyId) => {
+            const { data: { user } } = await mutate({
+                variables: { input: { id, name, email, password, companyId } },
+                context: {
+                  headers: { 'Authorization': 'Bearer ' + getAccessToken() },
+                },
+            });
+            return user;
+        },
+        loading,
+        error: Boolean(error),
+    }
+}
+
+export function useUpdateUserPassword() {
+    const [mutate, { loading, error }] = useMutation(UPDATE_USER_PASSWORD_MUTATION);
+    return {
+        updateUserPassword: async (id, name, email, password, companyId) => {
+            const { data: { user } } = await mutate({
+                variables: { input: { id, name, email, password, companyId } },
+                context: {
+                  headers: { 'Authorization': 'Bearer ' + getAccessToken() },
                 },
             });
             return user;
