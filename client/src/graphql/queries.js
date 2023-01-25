@@ -92,6 +92,14 @@ export const USER_QUERY = gql`
             email
             password
             companyId
+            company {
+                id
+                name
+            }
+            companies {
+                id
+                name
+            }
         }
     }
 `;
@@ -117,6 +125,15 @@ export const UPDATE_USER_EMAIL_MUTATION = gql`
 export const UPDATE_USER_PASSWORD_MUTATION = gql`
     mutation UpdateUserPasswordMutation($input: UpdateUserInput!){
         user: updateUserPassword(input: $input) {
+            ...UserDetail
+        }
+    }
+    ${USER_DETAIL_FRAGMENT}
+`;
+
+export const UPDATE_USER_COMPANY_MUTATION = gql`
+    mutation UpdateUserCompanyMutation($input: UpdateUserInput!){
+        user: updateUserCompany(input: $input) {
             ...UserDetail
         }
     }

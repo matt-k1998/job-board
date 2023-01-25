@@ -4,19 +4,41 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from 'react';
 import classes from './ProfileSettings.module.css'
 import { getUser } from '../auth';
-import { useUser, useUpdateUserName, useUpdateUserEmail, useUpdateUserPassword } from '../graphql/hooks';
+import {
+    useUser,
+    useUpdateUserName,
+    useUpdateUserEmail,
+    useUpdateUserPassword,
+    useUpdateUserCompany
+} from '../graphql/hooks';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function ProfileSettings() {
     const [currentUser] = useState(getUser);
     const [visibleItem, setVisibleItem] = useState();
     const { user } = useUser(currentUser.id);
-
     const [name, setName] = useState(!user ? '' : user.name);
     const [email, setEmail] = useState(!user ? '' : user.email);
     const [password, setPassword] = useState(!user ? '' : user.password);
-    const { updateUserName} = useUpdateUserName();
+    const [companyName, setCompanyName] = useState(!user ? '' : user.company.name);
+    const [companies] = useState(!user ? '' : user.companies);
+
+    let resCompanies = [];
+    let resCompaniesObj = {};
+    Object.values(companies).forEach(element => {
+        resCompanies.push(element.name);
+        resCompaniesObj[element.name] = element.id;
+    });
+
+    var selectedCompanyId;
+    if (resCompaniesObj.hasOwnProperty(companyName)) {
+        selectedCompanyId = resCompaniesObj[companyName];
+    }
+
+    const { updateUserName } = useUpdateUserName();
     const { updateUserEmail } = useUpdateUserEmail();
     const { updateUserPassword } = useUpdateUserPassword();
+    const { updateUserCompany } = useUpdateUserCompany();
 
     const handleUserNameChange = async (event) => {
         event.preventDefault();
@@ -33,9 +55,19 @@ function ProfileSettings() {
         await updateUserPassword(user.id, name, user.email, password, user.companyId);
     }
 
+    const handleUserCompanyChange = async (event) => {
+        event.preventDefault();
+        await updateUserCompany(user.id, name, user.email, user.password, selectedCompanyId);
+    }
+
     const handleCancelPress = (event) => {
         event.preventDefault();
         setVisibleItem();
+    }
+
+    const handleSelect = (eventKey, event) => {
+        event.persist();
+        setCompanyName(eventKey);
     }
 
     return (
@@ -140,11 +172,20 @@ function ProfileSettings() {
                     {
                         visibleItem === "editCompany" &&
                         <div className={classes.field}>
-                            <input type="text" className={classes.editInput}
-                                onClick={(e) =>  e.preventDefault()}
-                            />
+                            <Dropdown className={classes.editInput} onSelect={handleSelect}>
+                                <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
+                                    Select Company
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu variant="dark">
+                                    {
+                                        resCompanies.map(cName => {
+                                            return <Dropdown.Item eventKey={cName} key={cName}>{cName}</Dropdown.Item>
+                                        })
+                                    }
+                                </Dropdown.Menu>
+                            </Dropdown>
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={(e) => e.preventDefault()}/>
+                                <CheckIcon onClick={handleUserCompanyChange}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={handleCancelPress}/>

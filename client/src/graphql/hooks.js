@@ -7,6 +7,7 @@ import {
     JOBS_PER_COMPANY_QUERY,
     JOB_QUERY,
     UPDATE_JOB_MUTATION,
+    UPDATE_USER_COMPANY_MUTATION,
     UPDATE_USER_EMAIL_MUTATION,
     UPDATE_USER_NAME_MUTATION,
     UPDATE_USER_PASSWORD_MUTATION,
@@ -158,6 +159,23 @@ export function useUpdateUserPassword() {
     const [mutate, { loading, error }] = useMutation(UPDATE_USER_PASSWORD_MUTATION);
     return {
         updateUserPassword: async (id, name, email, password, companyId) => {
+            const { data: { user } } = await mutate({
+                variables: { input: { id, name, email, password, companyId } },
+                context: {
+                  headers: { 'Authorization': 'Bearer ' + getAccessToken() },
+                },
+            });
+            return user;
+        },
+        loading,
+        error: Boolean(error),
+    }
+}
+
+export function useUpdateUserCompany() {
+    const [mutate, { loading, error }] = useMutation(UPDATE_USER_COMPANY_MUTATION);
+    return {
+        updateUserCompany: async (id, name, email, password, companyId) => {
             const { data: { user } } = await mutate({
                 variables: { input: { id, name, email, password, companyId } },
                 context: {

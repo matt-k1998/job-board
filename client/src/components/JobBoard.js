@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { getUser } from '../auth';
 
 function JobBoard() {
-  const [currentUser, setUser] = useState(getUser);
+  const [currentUser] = useState(getUser);
   const { jobs, loading, error } = useJobsPerComany(currentUser.id);
 
   if (!currentUser) {
