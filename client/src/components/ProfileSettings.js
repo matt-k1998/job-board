@@ -1,7 +1,7 @@
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classes from './ProfileSettings.module.css'
 import { getUser } from '../auth';
 import {
@@ -12,17 +12,35 @@ import {
     useUpdateUserCompany
 } from '../graphql/hooks';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Alert from './generic-components/Alert';
 
 function ProfileSettings() {
-    const [currentUser] = useState(getUser);
+    const [signedInUser] = useState(getUser);
     const [visibleItem, setVisibleItem] = useState();
-    const { user } = useUser(currentUser.id);
+    const [isLoading, setIsLoading] = useState(true);
+    const { user, loading } = useUser(signedInUser.id);
+    const [loadedUser, setLoadedUser] = useState();
+    const [companies, setCompanies] = useState(!user ? '' : user.companies);
+    const [dropdownTitle, setDropdownTitle] = useState(!user ? '' : user.company.name);
     const [name, setName] = useState(!user ? '' : user.name);
     const [email, setEmail] = useState(!user ? '' : user.email);
     const [password, setPassword] = useState(!user ? '' : user.password);
     const [companyName, setCompanyName] = useState(!user ? '' : user.company.name);
-    const [companies] = useState(!user ? '' : user.companies);
-    const [dropdownTitle, setDropdownTitle] = useState('Select Company');
+
+    useEffect(() => {
+        setIsLoading(true);
+        if(!loading && user) {
+            setLoadedUser(user);
+            setCompanies(user.companies);
+            setDropdownTitle(user.company.name);
+            setName(user.name);
+            setEmail(user.email);
+            setPassword(user.password);
+            setCompanyName(user.company.name);
+        }
+        setIsLoading(false);
+    }, [loading, user]);
+
     const [isAlertVisible, setIsAlertVisible ] = useState(false);
     const [alertTitle, setAlertTitle ] = useState('');
 
@@ -43,12 +61,8 @@ function ProfileSettings() {
     const { updateUserPassword } = useUpdateUserPassword();
     const { updateUserCompany } = useUpdateUserCompany();
 
-    const RenderAlert = () => {
-        return (
-            <div className={classes.alertContainer}>
-                <div className={classes.alertInner}>{alertTitle} Updated</div>
-            </div>
-        );
+    if (isLoading) {
+        return <p>Loading...</p>
     }
 
     const setUpAlert = (title) => {
@@ -56,31 +70,31 @@ function ProfileSettings() {
         setAlertTitle(title);
         setTimeout(() => {
             setIsAlertVisible(false);
-        }, 3000);
+        }, 2000);
     }
 
     const handleUserNameChange = async (event) => {
         event.preventDefault();
         await updateUserName(user.id, name, user.email, user.password, user.companyId);
-        setUpAlert('Name');
+        setUpAlert('Name Updated');
     }
 
     const handleUserEmailChange = async (event) => {
         event.preventDefault();
         await updateUserEmail(user.id, name, email, user.password, user.companyId);
-        setUpAlert('Email');
+        setUpAlert('Email Updated');
     }
 
     const handleUserPasswordChange = async (event) => {
         event.preventDefault();
         await updateUserPassword(user.id, name, user.email, password, user.companyId);
-        setUpAlert('Password');
+        setUpAlert('Password Updated');
     }
 
     const handleUserCompanyChange = async (event) => {
         event.preventDefault();
         await updateUserCompany(user.id, name, user.email, user.password, selectedCompanyId);
-        setUpAlert('Company');
+        setUpAlert('Company Updated');
     }
 
     const handleCancelPress = (event) => {
@@ -97,7 +111,7 @@ function ProfileSettings() {
     return (
         <div>
             {
-                isAlertVisible && <RenderAlert />
+                isAlertVisible && <Alert key={user.id} text={alertTitle} />
             }
             <h1 className="title">
                 Profile Settings
@@ -117,7 +131,7 @@ function ProfileSettings() {
                         visibleItem === "editName" &&
                         <div className={classes.field}>
                             <input type="text" className={classes.editInput}
-                                defaultValue={name}
+                                defaultValue={loadedUser.name}
                                 onClick={(e) =>  e.preventDefault()}
                                 onChange={(e) => setName(e.target.value)}
                             />
@@ -144,7 +158,7 @@ function ProfileSettings() {
                         visibleItem === "editEmail" &&
                         <div className={classes.field}>
                             <input type="text" className={classes.editInput}
-                                defaultValue={email}
+                                defaultValue={loadedUser.email}
                                 onClick={(e) =>  e.preventDefault()}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -171,7 +185,7 @@ function ProfileSettings() {
                         visibleItem === "editPassword" &&
                         <div className={classes.field}>
                             <input type="text" className={classes.editInput}
-                                defaultValue={password}
+                                defaultValue={loadedUser.password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 onClick={(e) =>  e.preventDefault()}
                             />
