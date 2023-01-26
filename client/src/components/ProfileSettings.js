@@ -22,6 +22,9 @@ function ProfileSettings() {
     const [password, setPassword] = useState(!user ? '' : user.password);
     const [companyName, setCompanyName] = useState(!user ? '' : user.company.name);
     const [companies] = useState(!user ? '' : user.companies);
+    const [dropdownTitle, setDropdownTitle] = useState('Select Company');
+    const [isAlertVisible, setIsAlertVisible ] = useState(false);
+    const [alertTitle, setAlertTitle ] = useState('');
 
     let resCompanies = [];
     let resCompaniesObj = {};
@@ -40,24 +43,44 @@ function ProfileSettings() {
     const { updateUserPassword } = useUpdateUserPassword();
     const { updateUserCompany } = useUpdateUserCompany();
 
+    const RenderAlert = () => {
+        return (
+            <div className={classes.alertContainer}>
+                <div className={classes.alertInner}>{alertTitle} Updated</div>
+            </div>
+        );
+    }
+
+    const setUpAlert = (title) => {
+        setIsAlertVisible(true);
+        setAlertTitle(title);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 3000);
+    }
+
     const handleUserNameChange = async (event) => {
         event.preventDefault();
         await updateUserName(user.id, name, user.email, user.password, user.companyId);
+        setUpAlert('Name');
     }
 
     const handleUserEmailChange = async (event) => {
         event.preventDefault();
         await updateUserEmail(user.id, name, email, user.password, user.companyId);
+        setUpAlert('Email');
     }
 
     const handleUserPasswordChange = async (event) => {
         event.preventDefault();
         await updateUserPassword(user.id, name, user.email, password, user.companyId);
+        setUpAlert('Password');
     }
 
     const handleUserCompanyChange = async (event) => {
         event.preventDefault();
         await updateUserCompany(user.id, name, user.email, user.password, selectedCompanyId);
+        setUpAlert('Company');
     }
 
     const handleCancelPress = (event) => {
@@ -68,10 +91,14 @@ function ProfileSettings() {
     const handleSelect = (eventKey, event) => {
         event.persist();
         setCompanyName(eventKey);
+        setDropdownTitle(eventKey);
     }
 
     return (
         <div>
+            {
+                isAlertVisible && <RenderAlert />
+            }
             <h1 className="title">
                 Profile Settings
             </h1>
@@ -88,20 +115,18 @@ function ProfileSettings() {
                     </button>
                     {
                         visibleItem === "editName" &&
-                        <div>
-                            <form className={classes.field}>
-                                <input type="text" className={classes.editInput}
-                                    defaultValue={name}
-                                    onClick={(e) =>  e.preventDefault()}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                                <button className={classes.confirmCancel}>
-                                    <CheckIcon onClick={handleUserNameChange}/>
-                                </button>
-                                <button className={classes.confirmCancel}>
-                                    <CancelIcon onClick={handleCancelPress}/>
-                                </button>
-                            </form>
+                        <div className={classes.field}>
+                            <input type="text" className={classes.editInput}
+                                defaultValue={name}
+                                onClick={(e) =>  e.preventDefault()}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                            <button className={classes.confirmCancel}>
+                                <CheckIcon onClick={handleUserNameChange}/>
+                            </button>
+                            <button className={classes.confirmCancel}>
+                                <CancelIcon onClick={handleCancelPress}/>
+                            </button>
                         </div>
                     }
                 </div>
@@ -174,7 +199,7 @@ function ProfileSettings() {
                         <div className={classes.field}>
                             <Dropdown className={classes.editInput} onSelect={handleSelect}>
                                 <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-                                    Select Company
+                                    {dropdownTitle}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant="dark">
                                     {
