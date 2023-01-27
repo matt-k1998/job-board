@@ -12,10 +12,7 @@ type Mutation {
     createJob(input: CreateJobInput!): Job
     deleteJob(id: ID!): Job
     updateJob(input: UpdateJobInput!): Job
-    updateUserName(input: UpdateUserInput!): User
-    updateUserEmail(input: UpdateUserInput!): User
-    updateUserPassword(input: UpdateUserInput!): User
-    updateUserCompany(input: UpdateUserInput!): User
+    updateUser(input: UpdateUserInput!): User
 }
 
 # Regular types can also be called "output types" because they can only be returned by a query

@@ -33,48 +33,12 @@ export const resolvers = {
             rejectIf(job.companyId !== user.companyId);
             return Job.update({...input, companyId: user.companyId });
         },
-        updateUserName: async (_root, { input }, { user }) => {
+        updateUser: async (_root, { input }, { user }) => {
             rejectIf(!user);
             const userFromDb = await User.findById(input.id);
             rejectIf(userFromDb.id !== user.id);
             return User.update({
                 ...input,
-                email: user.email,
-                password: user.password,
-                companyId: user.companyId,
-            });
-        },
-        updateUserEmail: async (_root, { input }, { user }) => {
-            rejectIf(!user);
-            const userFromDb = await User.findById(input.id);
-            rejectIf(userFromDb.id !== user.id);
-            return User.update({
-                ...input,
-                name: user.name,
-                password: user.password,
-                companyId: user.companyId,
-            });
-        },
-        updateUserPassword: async (_root, { input }, { user }) => {
-            rejectIf(!user);
-            const userFromDb = await User.findById(input.id);
-            rejectIf(userFromDb.id !== user.id);
-            return User.update({
-                ...input,
-                name: user.name,
-                email: user.email,
-                companyId: user.companyId,
-            });
-        },
-        updateUserCompany: async (_root, { input }, { user }) => {
-            rejectIf(!user);
-            const userFromDb = await User.findById(input.id);
-            rejectIf(userFromDb.id !== user.id);
-            return User.update({
-                ...input,
-                name: user.name,
-                email: user.email,
-                password: user.password,
             });
         },
     },

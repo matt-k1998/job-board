@@ -4,13 +4,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useEffect, useState } from 'react';
 import classes from './ProfileSettings.module.css'
 import { getUser } from '../auth';
-import {
-    useUser,
-    useUpdateUserName,
-    useUpdateUserEmail,
-    useUpdateUserPassword,
-    useUpdateUserCompany
-} from '../graphql/hooks';
+import { useUser, useUpdateUser } from '../graphql/hooks';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Alert from './generic-components/Alert';
 
@@ -52,14 +46,13 @@ function ProfileSettings() {
     });
 
     var selectedCompanyId;
+    var selectedCompanyName;
     if (resCompaniesObj.hasOwnProperty(companyName)) {
         selectedCompanyId = resCompaniesObj[companyName];
+        selectedCompanyName = resCompanies.filter(r => r === companyName);
     }
 
-    const { updateUserName } = useUpdateUserName();
-    const { updateUserEmail } = useUpdateUserEmail();
-    const { updateUserPassword } = useUpdateUserPassword();
-    const { updateUserCompany } = useUpdateUserCompany();
+    const { updateUser } = useUpdateUser();
 
     if (isLoading) {
         return <p>Loading...</p>
@@ -73,28 +66,18 @@ function ProfileSettings() {
         }, 2000);
     }
 
-    const handleUserNameChange = async (event) => {
+    async function handleUserUpdate(event, text) {
         event.preventDefault();
-        await updateUserName(user.id, name, user.email, user.password, user.companyId);
-        setUpAlert('Name Updated');
+        await updateUser(user.id, name, email, password, user.companyId);
+        setUpAlert(text);
+        setVisibleItem();
     }
 
-    const handleUserEmailChange = async (event) => {
+    async function handleUserCompanyChange(event, text) {
         event.preventDefault();
-        await updateUserEmail(user.id, name, email, user.password, user.companyId);
-        setUpAlert('Email Updated');
-    }
-
-    const handleUserPasswordChange = async (event) => {
-        event.preventDefault();
-        await updateUserPassword(user.id, name, user.email, password, user.companyId);
-        setUpAlert('Password Updated');
-    }
-
-    const handleUserCompanyChange = async (event) => {
-        event.preventDefault();
-        await updateUserCompany(user.id, name, user.email, user.password, selectedCompanyId);
-        setUpAlert('Company Updated');
+        await updateUser(user.id, name, email, password, selectedCompanyId);
+        setUpAlert(text);
+        setVisibleItem();
     }
 
     const handleCancelPress = (event) => {
@@ -105,7 +88,7 @@ function ProfileSettings() {
     const handleSelect = (eventKey, event) => {
         event.persist();
         setCompanyName(eventKey);
-        setDropdownTitle(eventKey);
+        setDropdownTitle(selectedCompanyName);
     }
 
     return (
@@ -136,7 +119,7 @@ function ProfileSettings() {
                                 onChange={(e) => setName(e.target.value)}
                             />
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={handleUserNameChange}/>
+                                <CheckIcon onClick={(e) => handleUserUpdate(e,'Name Updated')}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={handleCancelPress}/>
@@ -163,7 +146,7 @@ function ProfileSettings() {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={handleUserEmailChange}/>
+                                <CheckIcon onClick={(e) => handleUserUpdate(e,'Email Updated')}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={handleCancelPress}/>
@@ -190,7 +173,7 @@ function ProfileSettings() {
                                 onClick={(e) =>  e.preventDefault()}
                             />
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={handleUserPasswordChange}/>
+                                <CheckIcon onClick={(e) => handleUserUpdate(e,'Password Updated')}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={handleCancelPress}/>
@@ -224,7 +207,7 @@ function ProfileSettings() {
                                 </Dropdown.Menu>
                             </Dropdown>
                             <button className={classes.confirmCancel}>
-                                <CheckIcon onClick={handleUserCompanyChange}/>
+                                <CheckIcon onClick={(e) => handleUserCompanyChange(e,'Company Updated')}/>
                             </button>
                             <button className={classes.confirmCancel}>
                                 <CancelIcon onClick={handleCancelPress}/>

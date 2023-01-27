@@ -104,36 +104,9 @@ export const USER_QUERY = gql`
     }
 `;
 
-export const UPDATE_USER_NAME_MUTATION = gql`
-    mutation UpdateUserNameMutation($input: UpdateUserInput!){
-        user: updateUserName(input: $input) {
-            ...UserDetail
-        }
-    }
-    ${USER_DETAIL_FRAGMENT}
-`;
-
-export const UPDATE_USER_EMAIL_MUTATION = gql`
-    mutation UpdateUserEmailMutation($input: UpdateUserInput!){
-        user: updateUserEmail(input: $input) {
-            ...UserDetail
-        }
-    }
-    ${USER_DETAIL_FRAGMENT}
-`;
-
-export const UPDATE_USER_PASSWORD_MUTATION = gql`
-    mutation UpdateUserPasswordMutation($input: UpdateUserInput!){
-        user: updateUserPassword(input: $input) {
-            ...UserDetail
-        }
-    }
-    ${USER_DETAIL_FRAGMENT}
-`;
-
-export const UPDATE_USER_COMPANY_MUTATION = gql`
-    mutation UpdateUserCompanyMutation($input: UpdateUserInput!){
-        user: updateUserCompany(input: $input) {
+export const UPDATE_USER_MUTATION = gql`
+    mutation UpdateUserMutation($input: UpdateUserInput!){
+        user: updateUser(input: $input) {
             ...UserDetail
         }
     }
